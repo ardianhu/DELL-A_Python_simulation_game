@@ -21,6 +21,24 @@
       </div>
    </div>
 </div>
+<!-- Setting -->
+<div id="settingModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 z-50 flex items-center justify-center hidden">
+   <div class="bg-gray-800 rounded-lg shadow-lg w-1/4 lg:w-1/4 max-h-1/4 flex flex-col">
+      <div class="flex justify-between items-center p-4 border-b border-gray-500">
+         <h2 class="text-xl font-semibold text-white">Setting</h2>
+         <button id="closeSettingModalBtn" class="text-gray-300 hover:text-gray-600">&times;</button>
+      </div>
+      <div class="p-4 flex-grow overflow-auto text-gray-300">
+         <div class="flex justify-between items-center">
+            <div class="text-2xl text-white">Sound</div>
+            <button id="muteButton" class="bg-sky-700 hover:bg-sky-200 font-mono text-white hover:text-sky-700 text-2xl py-4 px-6">Mute</button>
+         </div>
+      </div>
+      <div class="flex justify-end p-4 border-t border-gray-500">
+         <button id="closeSettingModalBtnFooter" class="bg-red-500 text-white px-4 py-2 rounded">Close</button>
+      </div>
+   </div>
+</div>
 <div class="bg-gray-900 pt-0 min-h-screen flex flex-col-reverse md:flex-row space-y-20 md:space-y-0 md:space-x-10 md:pt-28 px-10">
    <div class="w-full md:w-1/2 h-full">
       <div class="terminal-header bg-zinc-700 text-white p-2 rounded-t-lg flex items-center">
@@ -31,7 +49,20 @@
       </div>
       <textarea name="" id="py-editor" cols="60" rows="10">{{ $logged->level->main_code }}</textarea>
       <div class=" flex justify-between items-center bg-[#0A0E14] p-2">
-         <button id="openModul-button" class="bg-white hover:bg-slate-300 text-black px-4 py-2 mt-2 rounded ml-2">Modul</button>
+         <div class="flex justify-start items-center space-x-4">
+            <button id="openModul-button" class="bg-white hover:bg-slate-300 text-black px-4 py-2 mt-2 rounded ml-2">Modul</button>
+
+            <div class="flex justify-center items-center mt-2">
+               <div id="batteryRemain" class="flex justify-evenly items-center w-24 h-12 border-4 border-gray-500 rounded-lg bg-gray-800">
+                  <div class="w-3 h-8 bg-green-500"></div>
+                  <div class="w-3 h-8 bg-green-500"></div>
+                  <div class="w-3 h-8 bg-green-500"></div>
+                  <div class="w-3 h-8 bg-green-500"></div>
+                  <div class="w-3 h-8 bg-gray-300"></div>
+               </div>
+               <div class="w-2 h-4 bg-gray-500 rounded-sm"></div>
+            </div>
+         </div>
          <button id="run-button" class="bg-indigo-500 hover:bg-indigo-800 text-white px-4 py-2 mt-2 rounded">Run</button>
          <!-- <button id="openModul-button" class="w-[100px] bg-slate-900 h-[50px] flex items-center justify-center rounded-xl cursor-pointer relative overflow-hidden transition-all duration-500 ease-in-out shadow-md hover:scale-105 hover:shadow-lg before:absolute before:top-0 before:-left-full before:w-full before:h-full before:bg-gradient-to-r before:from-[#009b49] before:to-[rgb(105,184,141)] before:transition-all before:duration-500 before:ease-in-out before:z-[-1] before:rounded-xl hover:before:left-0 text-[#fff]">
             Modul
@@ -113,6 +144,8 @@
 <script>
    var levelNumber = "{{ $logged->level->level_number }}";
    var mainCode = `{{ $logged->level->main_code }}`;
+   var timeNumber = `{{ $logged->time }}`;
+   var batteryRemain = `{{ $logged->battery }}`;
 </script>
 <script src="{{ asset('/assets/game/game.js') }}"></script>
 <script>

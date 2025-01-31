@@ -54,7 +54,8 @@ print("moveUp") // untuk menggerakkan karakter ke atas</code></pre>
 rightCommand = "moveRight"
 # buat variabel baru, isi dengan perintah "moveDown"
 
-# masukkan variabel di atas ke dalam fungsi print() tanpa tanda petik untuk menjalankan karakter 
+# masukkan variabel di atas ke dalam fungsi print() tanpa tanda petik untuk menjalankan karakter
+# contoh: print(rightCommand)
 
 ',
             'modul' => '<div class="text-lg font-bold">Variabel dan Tipe Data</div>
@@ -193,7 +194,7 @@ Penulisan variabel Python sendiri juga memiliki aturan tertentu, yaitu:</p>
         Level::create([
             'level_name' => 'Aritmatika',
             'level_number' => 3,
-            'main_code' => '# gunakan variabel yang telah ada untuk menjalankan karakter
+            'main_code' => '# gunakan operator aritmatika untuk menyelesaikan tantangan ini
 
 mahasiswaInformatika = 274
 mahasiswaSistemInformasi = 125
@@ -201,8 +202,11 @@ mahasiswaSistemInformasi = 125
 # contoh: variabelBaru = namaVariabel + namaVariabel
 
 
-# buat variabel mahasiswaBerhenti dan terapkan operator aritmatika pada variabel hasil sehingga mempunyai nilai 390
+# buat variabel mahasiswaBerhenti dengan nilai tertentu sehingga total - mahasiswaBerhenti = 390. 
+# kamu bisa menggunakan print() dan operator aritmatika untuk memudahkan mengetahui suatu nilai
+# contoh: print(variabel - variabelLain) 
 
+# terapkan operator aritmatika pengurangan pada variabel hasil yang berisi total - mahasiswaBerhenti
 hasil = total
 
 # jangan hapus kode dibawah ini
@@ -291,9 +295,7 @@ if (hasil == 390):
         Level::create([
             'level_name' => 'Conditional Statement / Seleksi Kondisi',
             'level_number' => 4,
-            'main_code' => '# isi variabel di bawah dengan nilai yang benar
-
-# buat variabel isMoveRightTwice dengan nilai boolean True
+            'main_code' => '# buat variabel isMoveRightTwice dengan nilai boolean True
 
 
 # isi variabel jumlahMoveDown dengan nilai integer ketika program berjalan
@@ -321,7 +323,7 @@ elif jumlahMoveDown == 3:
 else:
     print("invalid option")
     
-# buat perintah if di bawah ini untuk menjalanan karakter ke kiri
+# buat perintah if di bawah ini untuk mengecek jumlahMoveLeft dan eksekusi print("moveLeft") sebanyak jumlahMoveLeft
 if
 ',
             'modul' => '<div class="text-lg font-bold">Seleksi Kondisi</div>
@@ -372,7 +374,10 @@ for
 for perintah in daftarPerintah:
     print(perintah)
 
-# perbaiki kode while di bawah ini (update nilai sisaBaterai di dalam kode while agar tidak infinite loop)
+# perulangan while di bawah ini akan terus menerus berjalan karena sisaBaterai tetap tiga
+# perbaiki kode while di bawah ini dengan cara 
+# update nilai sisaBaterai di dalam kode while dengan cara mengupdate nilai sisaBaterai agar berkurang 1
+# contoh: contohVariabel = contohVariabel - 1
 sisaBaterai = 3
 kosong = 0
 while sisaBaterai > kosong:
@@ -483,9 +488,10 @@ type() : Untuk mengetahui tipe data dari suatu objek</code></pre>
         print(perintah)
 
 listPerintah = ["moveDown", "moveRight", "moveUp", "moveUp", "moveUp", "moveLeft", "moveLeft", "moveUp", "moveUp"]
-# modifikasi listPerintah dengan cara contoh listPerintah[4] = "moveRight"
+# perintah di listPerintah akan dijalankan, perhatikan dan sesuaikan perintah dan lintasan
+# modifikasi listPerintah, contoh listPerintah[4] = "moveRight"
 listPerintah 
-# delete satu element yang tidak diperlukan
+# delete satu element yang tidak diperlukan, contoh: del listPerintah[4]
 del
 listCommand(listPerintah)
 

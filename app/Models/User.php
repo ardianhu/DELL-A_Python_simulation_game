@@ -23,6 +23,9 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'time',
+        'battery',
+        'game_over',
         'level_id'
     ];
 

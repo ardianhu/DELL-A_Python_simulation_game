@@ -260,6 +260,8 @@ function handleCommand(command, callback) {
     } else if (command === 'moveRight' && x < boardSize - 1) {
         playerPosition.x += 1;
     }
+    const moveSound = new Audio('/assets/game/move.mp3');
+    moveSound.play();
     updatePlayerPosition();
     if (callback) {
         callback();
@@ -391,12 +393,13 @@ function processCommands() {
 document.addEventListener('DOMContentLoaded', createBoard);
 
 
+const timeUsed = parseInt(timeNumber);
 // TIMER
-let hour = 0;
-            let minute = 0;
-            let second = 0;
-            let count = 0;
-            let timer;
+let hour = Math.floor(timeUsed / 3600);
+let minute = Math.floor((timeUsed % 3600) / 60);
+let second = timeUsed % 60;
+let count = 0;
+let timer;
  
             $('#start').on('click', function () {
                 // Check if the timer is already running
@@ -431,6 +434,9 @@ let hour = 0;
                 updateDisplay();
             });
  
+            let ajaxUpdateInterval = 5000; // Update every 5 seconds
+            let ajaxUpdateTimer = 0;
+
             function stopWatch() {
                 count++;
  
@@ -449,6 +455,17 @@ let hour = 0;
                     minute = 0;
                     second = 0;
                 }
+
+                if (minute == 5) {
+                    timeReached()
+                    stopTimer()
+                }
+                // Trigger AJAX update every 5 seconds
+                ajaxUpdateTimer += 10; // Since stopWatch is called every 10ms
+                if (ajaxUpdateTimer >= ajaxUpdateInterval && minute < 5) {
+                    updateTimerInDatabase();
+                    ajaxUpdateTimer = 0; // Reset the counter
+                }
  
                 updateDisplay();
             }
@@ -458,6 +475,95 @@ let hour = 0;
                 $('#min').text(minute.toString().padStart(2, '0'));
                 $('#sec').text(second.toString().padStart(2, '0'));
                 $('#count').text(count.toString().padStart(2, '0'));
+            }
+
+            function timeReached() {
+                if (batteryRemain > 1) {
+                    $.ajax({
+                        url: '/time-reached', // Path to the backend endpoint
+                        type: 'GET',
+                        success: function(response) {
+                            console.log('Time reached successfully:', response);
+                        },
+                        error: function(error) {
+                            // console.error('Error sending time reached:', error);
+                        }
+                    });
+                
+                    Swal.fire({
+                        title: 'Time Limit Reached!',
+                        text: 'You lost one bar battery, Keep faster next time!',
+                        icon: 'info',
+                        showCancelButton: true,
+                        confirmButtonText: 'Try Again',
+                        cancelButtonText: 'Main Menu'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/game'
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            // Berhenti permainan
+                            window.location.href = '/';
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        url: '/game-over', // Path to the backend endpoint
+                        type: 'GET',
+                        success: function(response) {
+                            // console.log('Time reached successfully:', response);
+                        },
+                        error: function(error) {
+                            // console.error('Error sending time reached:', error);
+                        }
+                    });
+                
+                    Swal.fire({
+                        title: 'Game Over!',
+                        text: 'You lost all of your battery!',
+                        icon: 'info',
+                        confirmButtonText: 'Main Menu',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/';
+                        }
+                    });
+                }
+                
+            }
+
+            const batteryBars = document.querySelectorAll('#batteryRemain div');
+
+            // Set battery level based on the value of batteryRemain
+            for (let i = 0; i < batteryBars.length; i++) {
+                if (i < batteryRemain) {
+                    batteryBars[i].classList.remove('bg-gray-300');
+                    if (batteryRemain == 1) {
+                        batteryBars[i].classList.add('bg-red-500');
+                    } else {
+                        batteryBars[i].classList.add('bg-green-500');
+                    }
+                } else {
+                    batteryBars[i].classList.remove('bg-green-500');
+                    batteryBars[i].classList.add('bg-gray-300');
+                }
+            }
+
+            function updateTimerInDatabase() {
+                const time = `${hour}:${minute}:${second}.${count}`;
+            
+                $.ajax({
+                    url: '/update-time', // Replace with your actual backend URL
+                    type: 'POST',
+                    data: {
+                        time: time,        // Send the current time
+                    },
+                    success: function(response) {
+                        console.log('Timer updated successfully:', response);
+                    },
+                    error: function(error) {
+                        console.error('Error updating timer:', error);
+                    }
+                });
             }
 
 // modal
@@ -470,6 +576,14 @@ $('#closeModalBtn, #closeModalBtnFooter').click(function() {
         timer = setInterval(stopWatch, 10);
     }
     $('#myModal').addClass('hidden');
+});
+
+$('#openSetting-button').click(function() {
+    $('#settingModal').removeClass('hidden');
+});
+
+$('#closeSettingModalBtn, #closeSettingModalBtnFooter').click(function() {
+    $('#settingModal').addClass('hidden');
 });
 
 // Close modal when clicking outside of it
@@ -514,3 +628,54 @@ function decodeHTMLEntities(text) {
     textArea.innerHTML = text;
     return textArea.value;
 }
+var isMuted = localStorage.getItem('isMuted') === 'true'; // Get the mute state from localStorage
+            var audio; // Declare the audio element globally
+
+            // Function to toggle mute and unmute
+            function toggleMuteBackgroundMusic() {
+                if (audio) {
+                    if (isMuted) {
+                        audio.muted = false;
+                        document.getElementById('muteButton').innerText = 'Mute'; // Change button text to "Mute"
+                        audio.play(); // Ensure the audio is playing after unmute
+                    } else {
+                        audio.muted = true;
+                        document.getElementById('muteButton').innerText = 'Unmute'; // Change button text to "Unmute"
+                        audio.pause(); // Pause the audio when muted
+                    }
+                    isMuted = !isMuted; // Toggle the mute state
+                    localStorage.setItem('isMuted', isMuted); // Save the mute state to localStorage
+                }
+            }
+
+            // Play background music on page load
+            function playBackgroundMusic() {
+                audio = document.createElement('audio'); // Initialize the audio element globally
+                audio.src = '/assets/game/background.mp3'; // Path to your background music
+                audio.loop = true;
+                audio.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+
+                // Check the initial mute state from localStorage
+                if (isMuted) {
+                    audio.muted = true;
+                    document.getElementById('muteButton').innerText = 'Unmute';
+                } else {
+                    audio.muted = false;
+                    document.getElementById('muteButton').innerText = 'Mute';
+                }
+
+                audio.play();
+            }
+
+            // Add event listener for page load
+            document.addEventListener('DOMContentLoaded', function() {
+                playBackgroundMusic(); // Automatically start playing background music
+            });
+
+            // Event listener for mute/unmute button in the settings modal
+            document.getElementById('muteButton').addEventListener('click', function() {
+                toggleMuteBackgroundMusic(); // Toggle mute/unmute on button click
+            });

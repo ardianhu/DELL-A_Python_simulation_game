@@ -40,4 +40,7 @@ Route::group(['middleware' => 'user'], function () {
     Route::get('/game', [HomeController::class, 'game']);
     Route::get('/new-game', [HomeController::class, 'newGame']);
     Route::post('/update-level', [HomeController::class, 'updateLevel']);
+    Route::post('/update-time', [HomeController::class, 'updateTime']);
+    Route::get('/time-reached', [HomeController::class, 'timeReached']);
+    Route::get('/game-over', [HomeController::class, 'gameOver']);
 });

@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('password');
             $table->string('avatar')->nullable();
             $table->unsignedBigInteger('level_id')->default(1);
+            $table->integer('time')->default(0);
+            $table->integer('battery')->default(5);
+            $table->boolean('game_over')->default(true);
             $table->foreign('level_id')->references('id')->on('levels');
             $table->rememberToken();
             $table->timestamps();

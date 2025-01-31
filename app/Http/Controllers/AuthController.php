@@ -79,10 +79,22 @@ class AuthController extends Controller
             'password' => bcrypt($request->password), // Hash the password
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Register Success! please login'
-        ], 200);
+        if (auth()->attempt(['email' => $request->email, 'password' => $request->password])) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Login success!'
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Login failed!'
+            ], 401);
+        }
+
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Register Success! please login'
+        // ], 200);
     }
     public function logout()
     {

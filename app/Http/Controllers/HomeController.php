@@ -21,9 +21,11 @@ class HomeController extends Controller
             ->get();
 
         $logged = auth()->user();
-        $isFinished = Score::where('user_id', $logged->id)->where('level_id', 7)->first();
+        $userScore = Score::where('user_id', $logged->id)->sum('score');
+        // $isFinished = Score::where('user_id', $logged->id)->where('level_id', 7)->first();
+        $isFinished = $logged->game_over;
         $isOnTheWay = Score::where('user_id', $logged->id)->first();
-        return view('landing', compact('leaderboard', 'logged', 'isFinished', 'isOnTheWay'));
+        return view('landing', compact('leaderboard', 'logged', 'isFinished', 'isOnTheWay', 'userScore'));
     }
 
     public function game()
@@ -39,6 +41,8 @@ class HomeController extends Controller
         $user = User::find($logged->id);
 
         $user->level_id = 1;
+        $user->battery = 5;
+        $user->game_over = false;
         $user->save();
 
         Score::where('user_id', $logged->id)->delete();
@@ -50,7 +54,7 @@ class HomeController extends Controller
         $level = $request->input('level');
         $logged = auth()->user();
         $user_id = $logged->id;
-        $time = $request->input('time');
+        // $time = $request->input('time');
 
         $time = $request->input('time');
 
@@ -93,10 +97,63 @@ class HomeController extends Controller
         $user = User::find($user_id);
         if ($new_level_id == $old_level_id + 1) {
             $user->level_id = $new_level_id;
+            $user->time = 0;
             $user->save();
             return response()->json(['message' => 'Level updated successfully']);
         } else {
+            $user->time = 0;
+            $user->game_over = true;
             return response()->json(['message' => 'You have completed the game']);
+        }
+    }
+
+    public function updateTime(Request $request)
+    {
+        $logged = auth()->user();
+        $user_id = $logged->id;
+        // $time = $request->input('time');
+
+        $time = $request->input('time');
+
+        // Parse the time string
+        list($hour, $minute, $second) = explode(':', $time);
+        $totalSeconds = ($hour * 3600) + ($minute * 60) + $second;
+        $user = User::find($user_id);
+        if ($user) {
+            $user->time = $totalSeconds;
+            $user->save();
+            return response()->json(['message' => 'Time updated successfully']);
+        } else {
+            return response()->json(['message' => 'Failed']);
+        }
+    }
+
+    public function timeReached()
+    {
+        $logged = auth()->user();
+        $user_id = $logged->id;
+        $user = User::find($user_id);
+        if ($user) {
+            $user->battery = $user->battery - 1;
+            $user->time = 0;
+            $user->save();
+            return response()->json(['message' => 'Battery updated']);
+        } else {
+            return response()->json(['message' => 'Failed']);
+        }
+    }
+    public function gameOver()
+    {
+        $logged = auth()->user();
+        $user_id = $logged->id;
+        $user = User::find($user_id);
+        if ($user) {
+            $user->game_over = true;
+            $user->time = 0;
+            $user->save();
+            return response()->json(['message' => 'Battery updated']);
+        } else {
+            return response()->json(['message' => 'Failed']);
         }
     }
 }

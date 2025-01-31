@@ -5,7 +5,7 @@
                 <i class="text-white fas fa-bars"></i>
             </button>
         </div>
-        <div class="lg:flex flex-grow items-center bg-white lg:bg-transparent lg:shadow-none hidden" id="example-collapse-navbar">
+        <div class="lg:flex flex-grow items-center bg-transparent lg:bg-transparent lg:shadow-none hidden" id="example-collapse-navbar">
             <ul class="flex flex-col lg:flex-row list-none lg:ml-auto">
                 <!-- <li class="flex items-center">
                     <a class="lg:text-white lg:hover:text-gray-300 text-gray-800 px-3 py-4 lg:py-2 flex items-center text-xs uppercase font-bold" href="#pablo"><i class="lg:text-gray-300 text-gray-500 fab fa-twitter text-lg leading-lg "></i><span class="lg:hidden inline-block ml-2">Twitter</span></a>
@@ -41,6 +41,7 @@
                             <div class="absolute left-0 w-40 origin-top-left bg-white divide-y divide-gray-100 rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300 z-30">
                                 <div class="py-1">
                                     <button onclick="mainMenu()" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  w-full text-start">Main Menu</button>
+                                    <button id="openSetting-button" href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100  w-full text-start">Setting</button>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-start">Quit</button>
